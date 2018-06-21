@@ -48,7 +48,11 @@ int main(int argc, char* argv[]){
 	status = pthread_create(&wait_thread_id, NULL, wait_thread, NULL);
 	if(status != 0)
 		err_abort(status, "Create wait thread");
-
+/*
+主线程调用pthread_cond_timewait函数等待至多2秒（从当前时间开始）。如果hibernation变量设置为大于2s的值，则条件变量等待操作将超时，返回ETIMEDOUT.
+如果hibernation设置为2s，则主线程和wait_thread线程发生竞争，并且每次运行的结果可能不同。如果hibernation变量设置为小于2s，则条件变量等待操作不会
+超时。
+*/
 	timeout.tv_sec = time(NULL) + 2;
 	timeout.tv_nsec = 0;
 	status = pthread_mutex_lock(&data.mutex);
