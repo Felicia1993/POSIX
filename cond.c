@@ -14,8 +14,10 @@ my_struct_t data={
 int hibernation = 1;//Default to 1 second
 
 /*
-Thread start routine. It will set the main thread's predicate and signal the condition variable.
+wait_thread线程睡眠一段时间以允许主线程在被唤醒之前条件变量等待操作，设置共享的谓词(data.value),然后发信号给条件变量。Wait_thread线程等待的时间由hibernation
+变量控制，默认是1秒
 */
+
 void* wait_thread(void *arg){
 	int status;
 	sleep(hibernation);
@@ -34,13 +36,11 @@ void* wait_thread(void *arg){
 	
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]){	
 	int status;
 	pthread_t wait_thread_id;
 	struct timespec timeout;
-	/*
 	
-	*/
 	if(argc > 1){
 		hibernation = atoi(argv[1]);
 	}
@@ -64,6 +64,7 @@ int main(int argc, char* argv[]){
 		else if(status != 0)
 			err_abort(status, "Wait on condition");
 	}
+	
 	if(data.value != 0)
 		printf("Condition was signaled.\n");
 	status = pthread_mutex_unlock(&data.mutex);
