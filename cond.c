@@ -16,6 +16,10 @@ int hibernation = 1;//Default to 1 second
 /*
 Thread start routine. It will set the main thread's predicate and signal the condition variable.
 */
+/*
+wait_thread睡眠一段时间以允许主线程在被唤醒之前条件变量等待操作，设置共享的谓词(data.value),然后发信号给条件变量。Wait_thread线程等待的时间由hibernation
+变量控制，默认是1秒
+*/
 void* wait_thread(void *arg){
 	int status;
 	sleep(hibernation);
